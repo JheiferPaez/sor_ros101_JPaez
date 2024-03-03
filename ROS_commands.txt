@@ -1,0 +1,98 @@
+# copy cylinder_input.py, cylinder_calc.py and radius_squarer.py to the src in sor_ros101jpaez package
+
+# be sure the files are executables by in "~/catkin_ws/src/sor_ros101_jpaez/scripts":
+sudo chmod +x cylinder_input.py
+sudo chmod +x cylinder_calc.py
+sudo chmod +x radius_squarer.py
+
+#edit the CMakeList.txt to add the path to the new scripts:
+cd ..
+gedit CMakeList.txt
+
+inside the file, add at the end, approximately at 207 line:
+
+"catkin_install_python(
+      PROGRAMS
+      scripts/cylinder_input.py
+      scripts/cylinder_calc.py
+      scripts/radius_squarer.py
+      DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})"
+      
+# use the command catkin_make in ~/catkin_ws
+cd..
+cd..
+catkin_make
+source ~/.bashrc 
+
+#verify the package is listed
+rospack list | grep sor_ros101_jpaez
+
+
+# new file to define the output messages from cylinder_calc.py
+copy msg folder, inside Cylinder.msg, inside:
+"float64 volume
+float64 surface_area"
+
+# describe custom message in CMakeList.txt
+
+Add to teh function "find_package(catkin REQUIRED COMPONENTS"
+  roscpp               # line 13
+  message_generation   # line 14
+  
+uncomment lines 51,52,53,54 y 55 at teh function "add_message_files("
+erase line 54 (  Message2.msg)
+modify line 53 from "  Message1.msg" to "  Cylinder.msg"
+
+uncomment lines 71,72,73,74 dat the function " generate_messages("
+
+uncomment line 108 (CATKIN_DEPENDS rospy std_msgs) dat function "catkin_package("
+modify from "CATKIN_DEPENDS rospy std_msgs" to "CATKIN_DEPENDS rospy std_msgs message_runtime"
+
+# describe custom message in package.xml
+
+uncomment line 40, to:
+<build_depend>message_generation</build_depend>
+uncomment line 46, to:
+<exec_depend>message_runtime</exec_depend>
+
+# use the command catkin_make in ~/catkin_ws
+cd..
+cd..
+catkin_make
+source ~/.bashrc 
+
+# describe the cylinder.launch file
+copy the lauch folder, inside cylinder.launch, inside:
+"<launch>
+    <node name="radius_squared" pkg="ros_tutorial" type="radius_squarer.py" />
+    <node name="cylinder_calc" pkg="ros_tutorial" type="cylinder_calc.py" />
+</launch>"
+
+
+# be sure de launch file is executable
+sudo chmod +x cylinder.launch
+
+# use the command catkin_make in ~/catkin_ws
+cd..
+cd..
+catkin_make
+source ~/.bashrc 
+
+# modify cylinder_input.py to include density
+gedit cylinder_input.py
+add density lines
+touch cylinder_weight.py
+add scripts/radius_squarer.py to CMakeList.py
+sudo chmod +x cylinder_weight.py
+gedit culinder_weight.py
+
+# modufy cylinder_calc.py to change the Cylinder.ms file origin
+change "from ros_tutorial.msg import Cylinder" to "from sor_ros101_jpaez.msg import Cylinder" 
+
+# modufy cylinder.launch to change the the package form "ros_tutorial" to "sor_ros101_jpaez"
+change "pkg="ros_tutorial"" to "pkg="sor_ros101_jpaez"" 
+
+cd..
+cd..
+catkin_make
+source ~/.bashrc 

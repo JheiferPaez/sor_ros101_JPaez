@@ -1,0 +1,5 @@
+<launch>
+    <node name="radius_squared" pkg="sor_ros101_jpaez" type="radius_squarer.py" />
+    <node name="cylinder_calc" pkg="sor_ros101_jpaez" type="cylinder_calc.py" />
+    <node name="cylinder_weight" pkg="sor_ros101_jpaez" type="cylinder_weight.py" />
+</launch>
